@@ -7,8 +7,8 @@ from pathlib import Path
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
 DEFAULT_DATABASE = "Prod SSH READ-ONLY"
-st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 
 def get_all_database_connections(api_url):
     try:
