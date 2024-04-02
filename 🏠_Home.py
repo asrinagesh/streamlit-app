@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
-DEFAULT_DATABASE = "Local PRODUCTION"
+DEFAULT_DATABASE = "Prod SSH READ-ONLY"
 
 def get_all_database_connections(api_url):
     try:
