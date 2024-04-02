@@ -83,8 +83,8 @@ st.set_page_config(
 
 # st.sidebar.subheader("Connect to the engine")
 # HOST = st.sidebar.text_input("Engine URI", value="http://localhost")
-st.session_state["HOST"] = "http://localhost"
-HOST = "http://localhost"
+st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 # if st.sidebar.button("Connect"):
 #     url = HOST + '/api/v1/heartbeat'
 #     if test_connection(url):
