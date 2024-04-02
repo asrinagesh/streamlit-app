@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
-DEFAULT_DATABASE = "RealEstate"
+DEFAULT_DATABASE = "Local PRODUCTION"
 
 def get_all_database_connections(api_url):
     try:
@@ -70,35 +70,30 @@ WAITING_TIME_TEXTS = [
 ]
 
 INTRODUCTION_TEXT = """
-This app is a proof of concept using the Dataherald NL-2-SQL engine using a streamlit front-end and a dataset of US real estate data.
-The data available includes: rents, sales prices, listing prices, price per square foot, number of homes sold, inventory and number of pending sales up to June 2023.
+This app is a proof of concept using the Dataherald NL-2-SQL engine using a streamlit front-end and a dataset of local production data.
 """  # noqa: E501
 INTRO_EXAMPLE = """
-A sample question you can ask is: Did property prices increase or decrease in the US in 2020?
+A sample question you can ask is: What is the shipment revenue for each branch in the past 6 months?
 """
 
 st.set_page_config(
-    page_title="Dataherald",
+    page_title="Worldnet SQL Test",
     page_icon="./images/logo.png",
     layout="wide")
 
-# Setup environment settings
-st.sidebar.title("Dataherald")
-st.sidebar.write("Query your structured database in natural language.")
-st.sidebar.write("Enable business users to get answers to ad hoc data questions in seconds.")  # noqa: E501
-st.sidebar.page_link("https://www.dataherald.com/", label="Visit our website", icon="🌐")
-st.sidebar.subheader("Connect to the engine")
-HOST = st.sidebar.text_input("Engine URI", value="https://streamlit.dataherald.ai")
-st.session_state["HOST"] = HOST
-if st.sidebar.button("Connect"):
-    url = HOST + '/api/v1/heartbeat'
-    if test_connection(url):
-        st.sidebar.success("Connected to engine.")
-    else:
-        st.sidebar.error("Connection failed.")
+# st.sidebar.subheader("Connect to the engine")
+# HOST = st.sidebar.text_input("Engine URI", value="http://localhost")
+st.session_state["HOST"] = "http://localhost"
+HOST = "http://localhost"
+# if st.sidebar.button("Connect"):
+#     url = HOST + '/api/v1/heartbeat'
+#     if test_connection(url):
+#         st.sidebar.success("Connected to engine.")
+#     else:
+#         st.sidebar.error("Connection failed.")
 
 # Setup main page
-st.image("images/dataherald.png", width=500)
+st.image("images/whitelogo.svg", width=500)
 if not test_connection(HOST + '/api/v1/heartbeat'):
     st.error("Could not connect to engine. Please connect to the engine on the left sidebar.")  # noqa: E501
     st.stop()
@@ -107,7 +102,7 @@ else:
     if st.session_state.get("database_connection_id", None) is None:
         st.session_state["database_connection_id"] = database_connections[DEFAULT_DATABASE]  # noqa: E501
     db_name = find_key_by_value(database_connections, st.session_state["database_connection_id"])  # noqa: E501
-    st.warning(f"Connected to {db_name} database.")
+    # st.warning(f"Connected to {db_name} database.")
     st.info(INTRODUCTION_TEXT)  # noqa: E501
     st.info(INTRO_EXAMPLE)
 

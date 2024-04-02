@@ -38,32 +38,6 @@ st.set_page_config(
 HOST = st.session_state["HOST"]
 
 with st.container():
-    st.title("Introduction")
-    st.write("Dataherald is a natural language-to-SQL engine built for enterprise-level question answering over structured data. It allows you to set up an API from your database that can answer questions in plain English.")
-    st.write("You can use Dataherald to:")
-    st.write("- Allow business users to get insights from the data warehouse without going through a data analyst.")
-    st.write("- Enable Q+A from your production DBs inside your SaaS application.")
-    st.write("- Create a ChatGPT plug-in from your proprietary data.")
-    st.write("Dataherald is built to:")
-    st.write("🔌 Be modular, allowing different implementations of core modules to be plugged-in")
-    st.write("🔋 Come batteries included: Have best-in-class implementations for modules like text to SQL, evaluation")
-    st.write("📀 Be easy to set-up and use with major data warehouses")
-    st.write("👨‍🏫 Allow for Active Learning, allowing you to improve the performance with usage")
-    st.write("🏎️ Be fast")
-
-with st.form("Database information"):
-    st.title("What are the databases used by this tool?")
-    database_connections = get_all_database_connections()
-    database_connection = st.selectbox("Database", database_connections.keys())
-    get_info = st.form_submit_button("get database information")
-    if get_info:
-        st.write(f"Database: {database_connection}")
-        st.write(f"Description: {DB_INFORMATION[database_connection]}")
-        st.write("Sample questions:")
-        for item in SAMPLE_QUESTIONS[database_connection]:
-            st.write(f"- {item}")
-
-with st.container():
     st.title("Golden Records 🌟")
     st.write("In order to improve the performance of NL-to-SQL engines, our system includes a few verified Question SQL samples in the prompts.")
     st.write("As more samples are verified, the performance of the NL-to-SQL engine not only improves in terms of accuracy but also improves in terms of speed.")

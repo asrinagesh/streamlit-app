@@ -127,7 +127,7 @@ with st.form("View all instructions"):
         instructions = get_instructions(f'{HOST}/api/v1/instructions', st.session_state["database_connection_id"])
         if instructions:
             df = pd.DataFrame(instructions)
-            df = df.drop(columns=["metadata"])
+            df = df.drop(columns=["metadata", "created_at", "db_connection_id"])
             st.dataframe(df)
         else:
             st.warning("No instructions found.")
