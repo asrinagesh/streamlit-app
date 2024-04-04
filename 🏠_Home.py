@@ -27,14 +27,14 @@ def add_database_connection(api_url, connection_data):
 
 def answer_question(api_url, db_connection_id, question):
     request_body = {
+        "evaluate": True,
         "llm_config": {
             "llm_name": "gpt-4-turbo-preview"
         },
         "prompt": {
             "text": question,
             "db_connection_id": db_connection_id,
-        },
-        "evaluate": True
+        }        
     }
     try:
         with requests.post(api_url, json=request_body, stream=True) as response:
