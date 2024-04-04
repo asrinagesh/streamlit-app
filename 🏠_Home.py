@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
-DEFAULT_DATABASE = "Prod SSH READ-ONLY"
+DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 
@@ -33,7 +33,8 @@ def answer_question(api_url, db_connection_id, question):
         "prompt": {
             "text": question,
             "db_connection_id": db_connection_id,
-        }
+        },
+        "evaluate": True
     }
     try:
         with requests.post(api_url, json=request_body, stream=True) as response:
@@ -41,8 +42,23 @@ def answer_question(api_url, db_connection_id, question):
             for chunk in response.iter_content(chunk_size=2048):
                 if chunk:
                     response = chunk.decode("utf-8")
-                    if "Final Answer:" in response and "```sql" in response:
+                    # print("OG RESPONSE: ")
+                    # print(response)
+                    # print("\n\n\n")
+
+                    if ("Final Answer:" in response and "```sql" in response):
                         response = response.replace("Final Answer:", "Final Answer:\n")
+                    elif ("Action: SqlDbQuery" in response):
+                        response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
+                        start_index_sql_query = response.find("Action Input: ")
+                        start_index_sql_query = start_index_sql_query + len("Action Input: ")
+                        response = response[:start_index_sql_query] + "\n```sql\n" + response[start_index_sql_query:] + "```"                             
+                    elif ("UNSIGNED" in response or "PRIMARY" in response):
+                        response = ""
+
+                    # print("Modified RESPONSE: ")
+                    # print(response)
+                    # print("\n\n\n")
                     yield response + "\n"
                     time.sleep(0.1)
     except requests.exceptions.RequestException as e:
