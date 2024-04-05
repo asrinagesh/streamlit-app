@@ -143,6 +143,7 @@ if user_input:
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
         st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        print(final_response)
         if final_response and "```sql" in final_response:
             st.write("I will execute the SQL Query now: ")
             start_indx = final_response.index("```sql")
