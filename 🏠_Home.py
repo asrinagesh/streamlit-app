@@ -48,11 +48,11 @@ def answer_question(api_url, db_connection_id, question):
 
                     if ("Final Answer:" in response and "```sql" in response):
                         response = response.replace("Final Answer:", "Final Answer:\n")
-                    elif ("Action: SqlDbQuery" in response):
-                        response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
-                        start_index_sql_query = response.find("Action Input: ")
-                        start_index_sql_query = start_index_sql_query + len("Action Input: ")
-                        response = response[:start_index_sql_query] + "\n```sql\n" + response[start_index_sql_query:] + "```"                             
+                    # elif ("Action: SqlDbQuery" in response):
+                    #     response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
+                    #     start_index_sql_query = response.find("Action Input: ")
+                    #     start_index_sql_query = start_index_sql_query + len("Action Input: ")
+                    #     response = response[:start_index_sql_query] + "\n```sql\n" + response[start_index_sql_query:] + "```"                             
                     elif ("UNSIGNED" in response or "PRIMARY" in response):
                         response = ""
 
