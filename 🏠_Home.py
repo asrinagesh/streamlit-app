@@ -1,4 +1,5 @@
 import requests
+import re
 import pandas as pd
 import streamlit as st
 import webbrowser
@@ -153,8 +154,8 @@ if user_input:
         print(final_response)
         if final_response and "```sql" in final_response:
             st.write("I will execute the SQL Query now: ")
-            start_indx = final_response.index("```sql")
-            end_indx = final_response.index("```")
+            start_indx = end_indx = re.search(r'\b(```sql)\b').start()
+            end_indx = re.search(r'\b(```)\b').start()
             print(start_indx)
             print(end_indx)
             full_query = final_response[start_indx + len("```sql") + 1 : end_indx]
