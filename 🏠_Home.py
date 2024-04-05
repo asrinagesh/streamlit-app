@@ -1,9 +1,11 @@
 import requests
+import pandas as pd
 import streamlit as st
 import webbrowser
 import time
 
 from pathlib import Path
+from sqlalchemy import create_engine
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
 DEFAULT_DATABASE = "Prod READ-ONLY"
@@ -60,7 +62,7 @@ def answer_question(api_url, db_connection_id, question):
                     # print(response)
                     # print("\n\n\n")
                     yield response + "\n"
-                    time.sleep(0.1)
+                    time.sleep(0.1)                
     except requests.exceptions.RequestException as e:
         st.error(f"Connection failed due to {e}.")
 
@@ -82,6 +84,14 @@ def find_key_by_value(dictionary, target_value):
             return key
     return None
 
+def execute_sql(sql):
+    engine = create_engine('mysql+pymysql://read_worldnet:brIVcCUQxUPjNOSVbDdh3DHfqRCfG0S@tms-prod.cluster-cakvi1wq42an.us-east-1.rds.amazonaws.com:8421/tms')
+    connection = engine.connect()
+    data = connection.execute(sql)
+    if data:
+        df = pd.DataFrame(data.fetchall())
+
+    return df
 
 WAITING_TIME_TEXTS = [
     ":wave: Hello. Please, give me a few moments and I'll be back with your answer.",  # noqa: E501
@@ -129,4 +139,7 @@ if user_input:
     output_container.chat_message("user").write(user_input)
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
-        st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        # st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        # st.write_stream("I will execute the SQL Query now: ")
+        st.write_stream(st.dataframe(execute_sql("SELECT CASE WHEN branch_id = 1 THEN 'NYC' WHEN branch_id = 2 THEN 'LAX' WHEN branch_id = 3 THEN 'CDG' WHEN branch_id = 4 THEN 'LHR' WHEN branch_id = 5 THEN 'MXP' ELSE 'Unknown' END AS Branch_Label, SUM(total) AS Revenue FROM shipment WHERE invoice_date BETWEEN '2024-01-05' AND '2024-04-05' AND invoice_id > 0 AND financial_status != 0 GROUP BY branch_id")))
+        
