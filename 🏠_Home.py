@@ -97,8 +97,10 @@ def execute_sql(sql):
 
     global final_response
     final_response = ""
-    
-    return df
+
+    csv = df.to_csv(index=False).encode('utf-8')
+
+    return df, csv
 
 WAITING_TIME_TEXTS = [
     ":wave: Hello. Please, give me a few moments and I'll be back with your answer.",  # noqa: E501
@@ -155,5 +157,7 @@ if user_input:
             end_indx = final_response.index("```")
             full_query = final_response[start_indx + len("```sql") + 1 : end_indx]
             print(full_query)
-            st.dataframe(execute_sql(full_query))
+            df, csv = execute_sql(full_query)
+            st.dataframe(df)
+            st.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')
         
