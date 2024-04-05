@@ -5,7 +5,7 @@ import webbrowser
 import time
 
 from pathlib import Path
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
 DEFAULT_DATABASE = "Prod READ-ONLY"
@@ -87,7 +87,7 @@ def find_key_by_value(dictionary, target_value):
 def execute_sql(sql):
     engine = create_engine('mysql+pymysql://read_worldnet:brIVcCUQxUPjNOSVbDdh3DHfqRCfG0S@tms-prod.cluster-cakvi1wq42an.us-east-1.rds.amazonaws.com:8421/tms')
     connection = engine.connect()
-    data = connection.execute(sql)
+    data = connection.execute(text(sql))
     if data:
         df = pd.DataFrame(data.fetchall())
 
