@@ -11,6 +11,7 @@ LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
 DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+final_response = ""
 
 def get_all_database_connections(api_url):
     try:
@@ -50,6 +51,7 @@ def answer_question(api_url, db_connection_id, question):
 
                     if ("Final Answer:" in response and "```sql" in response):
                         response = response.replace("Final Answer:", "Final Answer:\n")
+                        final_response = response
                     # elif ("Action: SqlDbQuery" in response):
                     #     response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
                     #     start_index_sql_query = response.find("Action Input: ")
@@ -88,6 +90,7 @@ def execute_sql(sql):
     engine = create_engine('mysql+pymysql://read_worldnet:brIVcCUQxUPjNOSVbDdh3DHfqRCfG0S@tms-prod.cluster-cakvi1wq42an.us-east-1.rds.amazonaws.com:8421/tms')
     connection = engine.connect()
     data = connection.execute(text(sql))
+
     if data:
         df = pd.DataFrame(data.fetchall())
 
@@ -139,7 +142,12 @@ if user_input:
     output_container.chat_message("user").write(user_input)
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
-        # st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
-        st.write("I will execute the SQL Query now: ")
-        st.dataframe(execute_sql("SELECT CASE WHEN branch_id = 1 THEN 'NYC' WHEN branch_id = 2 THEN 'LAX' WHEN branch_id = 3 THEN 'CDG' WHEN branch_id = 4 THEN 'LHR' WHEN branch_id = 5 THEN 'MXP' ELSE 'Unknown' END AS Branch_Label, SUM(total) AS Revenue FROM shipment WHERE invoice_date BETWEEN '2024-01-05' AND '2024-04-05' AND invoice_id > 0 AND financial_status != 0 GROUP BY branch_id"))
+        st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        if final_response and "```sql" in final_response:
+            st.write("I will execute the SQL Query now: ")
+            start_indx = final_response.index("```sql")
+            end_indx = final_response.index("```")
+            full_query = final_response[start_indx + len("```sql") + 1 : end_indx]
+            print(full_query)
+            st.dataframe(execute_sql(full_query))
         
