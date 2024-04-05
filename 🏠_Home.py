@@ -51,6 +51,7 @@ def answer_question(api_url, db_connection_id, question):
 
                     if ("Final Answer:" in response and "```sql" in response):
                         response = response.replace("Final Answer:", "Final Answer:\n")
+                        global final_response
                         final_response = response
                     # elif ("Action: SqlDbQuery" in response):
                     #     response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
@@ -94,6 +95,9 @@ def execute_sql(sql):
     if data:
         df = pd.DataFrame(data.fetchall())
 
+    global final_response
+    final_response = ""
+    
     return df
 
 WAITING_TIME_TEXTS = [
