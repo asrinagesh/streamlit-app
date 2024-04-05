@@ -140,6 +140,6 @@ if user_input:
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
         # st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
-        st.write_stream("I will execute the SQL Query now: ")
+        st.write("I will execute the SQL Query now: ")
         st.write(st.dataframe(execute_sql("SELECT CASE WHEN branch_id = 1 THEN 'NYC' WHEN branch_id = 2 THEN 'LAX' WHEN branch_id = 3 THEN 'CDG' WHEN branch_id = 4 THEN 'LHR' WHEN branch_id = 5 THEN 'MXP' ELSE 'Unknown' END AS Branch_Label, SUM(total) AS Revenue FROM shipment WHERE invoice_date BETWEEN '2024-01-05' AND '2024-04-05' AND invoice_id > 0 AND financial_status != 0 GROUP BY branch_id")))
         
