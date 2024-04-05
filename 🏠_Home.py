@@ -154,8 +154,8 @@ if user_input:
         print(final_response)
         if final_response and "```sql" in final_response:
             st.write("I will execute the SQL Query now: ")
-            start_indx = end_indx = re.search(r'\b(```sql)\b').start()
-            end_indx = re.search(r'\b(```)\b').start()
+            start_indx = end_indx = re.search(r'\b(```sql)\b', final_response).start()
+            end_indx = re.search(r'\b(```)\b', final_response).start()
             print(start_indx)
             print(end_indx)
             full_query = final_response[start_indx + len("```sql") + 1 : end_indx]
