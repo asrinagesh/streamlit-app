@@ -155,7 +155,10 @@ if user_input:
             st.write("I will execute the SQL Query now: ")
             start_indx = final_response.index("```sql")
             end_indx = final_response.index("```")
+            print(start_indx)
+            print(end_indx)
             full_query = final_response[start_indx + len("```sql") + 1 : end_indx]
+            print("FULL QUERY")
             print(full_query)
             df, csv = execute_sql(full_query)
             st.dataframe(df)
