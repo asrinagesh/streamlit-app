@@ -149,9 +149,9 @@ if user_input:
     output_container.chat_message("user").write(user_input)
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
-        st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        output_container.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
         if final_response and "```sql" in final_response:
-            st.write("I will execute the SQL Query now: ")
+            output_container.write("I will execute the SQL Query now: ")
 
             final_response = final_response.strip()
             start_indx = final_response.index("```sql") + len("```sql")
@@ -159,8 +159,8 @@ if user_input:
              
             full_query = final_response[start_indx:end_indx]
             df, csv = execute_sql(full_query)
-            st.dataframe(df)
-            st.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')
+            output_container.dataframe(df)
+            output_container.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')
     
-    st.empty()
+    output_container.empty()
         
