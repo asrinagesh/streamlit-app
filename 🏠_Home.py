@@ -162,5 +162,5 @@ if user_input:
             st.dataframe(df)
             st.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')
     
-    output_container.empty()
+    st.empty()
         
