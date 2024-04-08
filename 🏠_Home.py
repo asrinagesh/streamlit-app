@@ -46,25 +46,14 @@ def answer_question(api_url, db_connection_id, question):
             for chunk in response.iter_content(chunk_size=2048):
                 if chunk:
                     response = chunk.decode("utf-8")
-                    # print("OG RESPONSE: ")
-                    # print(response)
-                    # print("\n\n\n")
 
                     if ("Final Answer:" in response and "```sql" in response):
                         response = response.replace("Final Answer:", "Final Answer:\n")
                         global final_response
-                        final_response = response
-                    # elif ("Action: SqlDbQuery" in response):
-                    #     response = response.replace("Action: SqlDbQuery", "Action: SqlDbQuery\n")
-                    #     start_index_sql_query = response.find("Action Input: ")
-                    #     start_index_sql_query = start_index_sql_query + len("Action Input: ")
-                    #     response = response[:start_index_sql_query] + "\n```sql\n" + response[start_index_sql_query:] + "```"                             
+                        final_response = response                           
                     elif ("UNSIGNED" in response or "PRIMARY" in response):
                         response = ""
 
-                    # print("Modified RESPONSE: ")
-                    # print(response)
-                    # print("\n\n\n")
                     yield response + "\n"
                     time.sleep(0.1)                
     except requests.exceptions.RequestException as e:
@@ -143,15 +132,16 @@ else:
     st.info(INTRO_EXAMPLE)
 
 output_container = st.empty()
+time.sleep(0.1)
 user_input = st.chat_input("Ask your question")
 output_container = output_container.container()
 if user_input:
     output_container.chat_message("user").write(user_input)
     answer_container = output_container.chat_message("assistant")
     with st.spinner("Agent starts..."):
-        output_container.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
+        st.write_stream(answer_question(HOST + '/api/v1/stream-sql-generation', st.session_state["database_connection_id"], user_input))
         if final_response and "```sql" in final_response:
-            output_container.write("I will execute the SQL Query now: ")
+            st.write("I will execute the SQL Query now: ")
 
             final_response = final_response.strip()
             start_indx = final_response.index("```sql") + len("```sql")
@@ -159,8 +149,6 @@ if user_input:
              
             full_query = final_response[start_indx:end_indx]
             df, csv = execute_sql(full_query)
-            output_container.dataframe(df)
-            output_container.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')
-    
-    output_container.empty()
+            st.dataframe(df)
+            st.download_button("DOWNLOAD DATA", csv, "data.csv", key='download-csv')    
         
