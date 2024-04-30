@@ -117,7 +117,7 @@ st.set_page_config(
 #         st.sidebar.error("Connection failed.")
 
 # Setup main page
-st.image("/home/akash/nl-to-sql/streamlit-app/whitelogo.svg", width=500)
+st.image("/home/akash/nl-to-sql/streamlit-app/images/whitelogo.svg", width=500)
 if not test_connection(HOST + '/api/v1/heartbeat'):
     st.error("Could not connect to engine. Please connect to the engine on the left sidebar.")  # noqa: E501
     st.stop()
