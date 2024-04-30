@@ -1,0 +1,12 @@
+[Unit]
+Description=Dataherald Streamlit Frontend 
+
+[Service]
+Type=simple
+User=akash
+Restart=always
+RestartSec=2s
+ExecStart=/home/akash/nl-to-sql/streamlit-app/venv/bin/python3.11 -u /home/akash/nl-to-sql/streamlit-app/venv/bin/streamlit run /home/akash/nl-to-sql/streamlit-app/🏠_Home.py
+
+[Install]
+WantedBy=multi-user.target
