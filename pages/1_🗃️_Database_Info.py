@@ -2,6 +2,10 @@ import streamlit as st
 import requests
 import pandas as pd
 
+DEFAULT_DATABASE = "Prod READ-ONLY"
+HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+
 def get_all_database_connections(api_url):
     try:
         response = requests.get(api_url)
@@ -46,7 +50,7 @@ def list_table_descriptions(api_url, db_connection_id):
 
 st.set_page_config(
     page_title="Dataherald",
-    page_icon="./images/logo.png",
+    page_icon="/home/akash/nl-to-sql/streamlit-app/images/logo.png",
     layout="wide",
     initial_sidebar_state="collapsed")
 

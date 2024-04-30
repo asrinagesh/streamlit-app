@@ -8,7 +8,6 @@ import time
 from pathlib import Path
 from sqlalchemy import create_engine, text
 
-LOGO_PATH = Path(__file__).parent / "images" / "logo.png"
 DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
@@ -105,7 +104,7 @@ A sample question you can ask is: What is the shipment revenue for each branch i
 
 st.set_page_config(
     page_title="Worldnet SQL Test",
-    page_icon="./images/logo.png",
+    page_icon="/home/akash/nl-to-sql/streamlit-app/images/logo.png",
     layout="wide")
 
 # st.sidebar.subheader("Connect to the engine")

@@ -32,7 +32,7 @@ def get_all_database_connections():
 
 st.set_page_config(
     page_title="Dataherald",
-    page_icon="./images/logo.png",
+    page_icon="/home/akash/nl-to-sql/streamlit-app/images/logo.png",
     layout="wide")
 
 HOST = st.session_state["HOST"]

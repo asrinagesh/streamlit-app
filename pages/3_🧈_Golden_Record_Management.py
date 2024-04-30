@@ -4,6 +4,9 @@ import requests
 import json
 import sys
 
+DEFAULT_DATABASE = "Prod READ-ONLY"
+HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 
 def get_all_database_connections():
     api_url = f'{HOST}/api/v1/database-connections'
@@ -80,7 +83,7 @@ def find_key_by_value(dictionary, target_value):
 
 st.set_page_config(
     page_title="Dataherald",
-    page_icon="./images/logo.png",
+    page_icon="/home/akash/nl-to-sql/streamlit-app/images/logo.png",
     layout="wide",
     initial_sidebar_state="collapsed")
 
