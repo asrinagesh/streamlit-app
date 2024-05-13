@@ -35,6 +35,7 @@ def add_database_connection(api_url, connection_data):
         return None
 
 def answer_question(api_url, db_connection_id, question):
+    print("Client IP: ", st.session_state["client_ip"])
     request_body = {
         "evaluate": True,
         "llm_config": {
