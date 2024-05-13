@@ -7,6 +7,7 @@ import sys
 DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+st.session_state["database_connection_id"] = "660c513e7651edeab2f535ca"
 
 def get_all_database_connections():
     api_url = f'{HOST}/api/v1/database-connections'
@@ -148,7 +149,7 @@ with st.form("View golden records"):
     golden_records = get_golden_records(st.session_state["database_connection_id"])
     st.write(f"Total golden records: {len(golden_records)}")
     search_query = st.text_input("Search by question or SQL query", "")
-    default_limit_value = min(10, len(golden_records))
+    default_limit_value = len(golden_records)
     page = st.number_input("Page",
                             value=1,
                             min_value=1
@@ -158,30 +159,34 @@ with st.form("View golden records"):
                             max_value=len(golden_records),
                             value=default_limit_value,
                         )
-    if st.form_submit_button("View"):
-        with st.spinner("Loading golden records..."):
-            if search_query:
-                golden_records = [
-                    record
-                    for record in golden_records
-                    if search_query.lower() in record["question"].lower()
-                    or search_query.lower() in record["sql_query"].lower()
-                ]
-            if len(golden_records) > 0:
-                df = pd.DataFrame(golden_records)
-                try:
-                    df = df[df['db_connection_id'] == st.session_state["database_connection_id"]]  # noqa: E501
-                except KeyError:
-                    st.warning("Please select a database connection.")
-                df = df.iloc[(page-1)*limit:page*limit]
-                df.drop(columns=["db_connection_id"], inplace=True)
-                df.reset_index(drop=True, inplace=True)
-                if golden_records:
-                    st.dataframe(df)
-                else:
-                    st.warning("No golden records found.")
+    
+    df = pd.DataFrame(golden_records)
+    with st.spinner("Loading golden records..."):
+        if search_query:
+            golden_records = [
+                record
+                for record in golden_records
+                if search_query.lower() in record["question"].lower()
+                or search_query.lower() in record["sql_query"].lower()
+            ]
+        if len(golden_records) > 0:            
+            try:
+                df = df[df['db_connection_id'] == st.session_state["database_connection_id"]]  # noqa: E501
+            except KeyError:
+                st.warning("Please select a database connection.")
+            df = df.iloc[(page-1)*limit:page*limit]
+            df.drop(columns=["db_connection_id"], inplace=True)
+            df.reset_index(drop=True, inplace=True)
+            df = df.sort_index(ascending=False)
+            if golden_records:
+                st.dataframe(df)
             else:
                 st.warning("No golden records found.")
+        else:
+            st.warning("No golden records found.")
+
+    if st.form_submit_button("Refresh"):
+        st.rerun()
 
 with st.form("Delete golden record"):
     st.subheader("Delete golden record")

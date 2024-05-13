@@ -124,7 +124,7 @@ if not test_connection(HOST + '/api/v1/heartbeat'):
 else:
     database_connections = get_all_database_connections(HOST + '/api/v1/database-connections')  # noqa: E501
     if st.session_state.get("database_connection_id", None) is None:
-        st.session_state["database_connection_id"] = database_connections[DEFAULT_DATABASE]  # noqa: E501
+        st.session_state["database_connection_id"] = database_connections[DEFAULT_DATABASE] 
     db_name = find_key_by_value(database_connections, st.session_state["database_connection_id"])  # noqa: E501
     # st.warning(f"Connected to {db_name} database.")
     st.info(INTRODUCTION_TEXT)  # noqa: E501

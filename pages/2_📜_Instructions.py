@@ -6,6 +6,7 @@ import pandas as pd
 DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
+st.session_state["database_connection_id"] = "660c513e7651edeab2f535ca"
 
 def get_all_database_connections():
     api_url = f'{HOST}/api/v1/database-connections'
