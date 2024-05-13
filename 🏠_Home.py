@@ -7,11 +7,17 @@ import time
 
 from pathlib import Path
 from sqlalchemy import create_engine, text
+from streamlit.runtime.scriptrunner import get_script_run_ctx
+from streamlit import runtime
 
 DEFAULT_DATABASE = "Prod READ-ONLY"
 HOST = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 st.session_state["HOST"] = "http://ec2-52-72-247-170.compute-1.amazonaws.com"
 final_response = ""
+
+ctx = get_script_run_ctx()
+session_info = runtime.get_instance().get_client(ctx.session_id)
+print(session_info.request)
 
 def get_all_database_connections(api_url):
     try:
@@ -37,7 +43,7 @@ def answer_question(api_url, db_connection_id, question):
         "prompt": {
             "text": question,
             "db_connection_id": db_connection_id,
-        }        
+        }
     }
     try:
         with requests.post(api_url, json=request_body, stream=True) as response:
@@ -117,7 +123,7 @@ st.set_page_config(
 #         st.sidebar.error("Connection failed.")
 
 # Setup main page
-st.image("/home/akash/nl-to-sql/streamlit-app/images/whitelogo.svg", width=500)
+# st.image("/home/akash/nl-to-sql/streamlit-app/images/whitelogo.svg", width=500)
 if not test_connection(HOST + '/api/v1/heartbeat'):
     st.error("Could not connect to engine. Please connect to the engine on the left sidebar.")  # noqa: E501
     st.stop()
