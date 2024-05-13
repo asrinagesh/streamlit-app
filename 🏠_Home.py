@@ -40,13 +40,13 @@ def answer_question(api_url, db_connection_id, question):
         "evaluate": True,
         "llm_config": {
             "llm_name": "gpt-4-turbo-preview"
-        },
+        },                
         "prompt": {
             "text": question,
             "db_connection_id": db_connection_id,
-        },
-        "metadata": {
-            "requestor_ip_addr": st.session_state["client_ip"]
+            "metadata": {
+                "requestor_ip_addr": st.session_state["client_ip"]
+            }
         }
     }
     try:
