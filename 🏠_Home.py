@@ -17,7 +17,7 @@ final_response = ""
 
 ctx = get_script_run_ctx()
 session_info = runtime.get_instance().get_client(ctx.session_id)
-print(session_info.request)
+st.session_state["client_ip"] = session_info.request.remote_ip
 
 def get_all_database_connections(api_url):
     try:
@@ -43,6 +43,9 @@ def answer_question(api_url, db_connection_id, question):
         "prompt": {
             "text": question,
             "db_connection_id": db_connection_id,
+        },
+        "metadata": {
+            "requestor_ip_addr": st.session_state["client_ip"]
         }
     }
     try:
